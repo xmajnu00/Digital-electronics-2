@@ -1,4 +1,4 @@
 # Digital-electronics-2
 
-##VUT
+## VUT
 AVR-repository 10h
