@@ -20,6 +20,10 @@
 /* Define ------------------------------------------------------------*/
 #define LED_PIN     PB5
 #define BLINK_DELAY 500
+#define LED2_PIN     PD4
+#define button      PD2
+//*#define bit_is_set(sfr,0)
+//*#define bit_is_clear(PINB , 5)
 
 /* Variables ---------------------------------------------------------*/
 /* Function prototypes -----------------------------------------------*/
@@ -34,17 +38,26 @@ int main(void)
 {
     /* Set output pin */
     DDRB |= _BV(LED_PIN);           /* DDRB = DDRB or (0010 0000) */
-
+    DDRD |= _BV(LED2_PIN);
+    DDRD &= ~_BV(button);
     /* Turn LED off */
+    PORTD |= _BV(button);
     PORTB &= ~_BV(LED_PIN);         /* PORTB = PORTB and (0010 0000) */
+    PORTD &= ~_BV(LED2_PIN);
+    
 
     /* Infinite loop */
     for (;;)
     {
-        /* Invert LED and delay */
+      if (bit_is_clear(PIND , button))
+      {
+       /* Invert LED and delay */
         PORTB ^= _BV(LED_PIN);      /* PORTB = PORTB xor (0010 0000) */
-        _delay_ms(BLINK_DELAY);     /* Wait for several milisecs */
+         PORTD ^= _BV(LED2_PIN);   
+         _delay_ms(BLINK_DELAY);     /* Wait for several milisecs */
+      }
     }
 
     return (0);
+  
 }
