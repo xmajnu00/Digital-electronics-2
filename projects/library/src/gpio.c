@@ -1,7 +1,8 @@
 #include "gpio.h"
 
-void  GPIO_config_output(volatile  uint8_t *reg_name , uint8_t  pin_num);
-{// Body of the  function
+void  GPIO_config_output(volatile  uint8_t *reg_name , uint8_t  pin_num)
+
+{
 *reg_name  |= _BV(pin_num);
 }
 void GPIO_write(volatile uint8_t *reg_name, uint8_t pin_num, uint8_t pin_val)
