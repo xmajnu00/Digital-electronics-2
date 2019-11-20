@@ -30,9 +30,10 @@
 .global rand4_asm
 rand4_asm:
     loop:
-        SBI PORTB,5
-        CBI PORTB,5
+        sbi PORTB,5
+        cbi PORTB,5
         dec input
+        
         brne loop
         
     ret                     ; Return from subroutine
