@@ -9,20 +9,10 @@
 
 #define UART_BAUD_RATE 9600
 
-
-/* Variables ---------------------------------------------------------*/
-/* Function prototypes -----------------------------------------------*/
-
-/* Functions ---------------------------------------------------------*/
-/**
- *  Brief:  Main program. Read ADC result and transmit via UART.
- *  Input:  None
- *  Return: None
- */
+//
 
  uint16_t horizontal = 0;
  uint16_t vertical = 0;
- //uint8_t count = 0;
  char uart_string[4];
  char counter_string[4];
 int main(void)
@@ -39,17 +29,13 @@ int main(void)
     //enable ADC
     GPIO_write(&ADCSRA,ADEN,1);             
     
-    //set refference voltage to 5V
-    //GPIO_write(&ADMUX,REFS0,1);
-
-    //set input channel to ADC0(pin PC0)
+    //set refference voltage to 5V and input channel to ADC0(pin PC0)
     ADMUX &= ~( _BV(MUX0) | _BV(MUX1) | _BV(MUX2) | _BV(MUX3));
 	ADMUX |= (_BV(REFS0));
 
-    //set ADC prescaler as 64
+    //set ADC prescaler as 64, enable ADC interrupt
     ADCSRA &= ~(_BV(ADPS0));
     ADCSRA |= (_BV(ADPS1) | _BV(ADPS2) | _BV(ADIE));
-    //enable ADC interrupt
 
     //set ADC trigger on Timer0 overflow
     ADCSRB &= ~(_BV(ADTS1) | _BV(ADTS2));
@@ -63,18 +49,13 @@ int main(void)
     TIM_config_prescaler(TIM1, TIM_PRESC_8);
     TIM_config_interrupt(TIM1, TIM_OVERFLOW_ENABLE);
 
-    //configure Timer1 for Fast PWM operation (WGM13:0 = 14)
-    
+    //configure Timer1 for Fast PWM operation (WGM 13:0)
     TCCR1A |= (_BV(WGM11) | _BV(COM1A1) | _BV(COM1B1));
     TCCR1A &= ~(_BV(COM1A0) | _BV(COM1B0));
 
     TCCR1B |= (_BV(WGM12) | _BV(WGM13));
-    //defines mode when OC1A pin is enabled on compare match and clears when BOTTOM
-   /* GPIO_write(&TCCR1A, COM1A1,1);
-    GPIO_write(&TCCR1A, COM1A0,0);
 
-    GPIO_write(&TCCR1A, COM1B1,1);
-    GPIO_write(&TCCR1A, COM1B0,0);*/
+    //defines mode when OC1A pin is enabled on compare match and clears when BOTTOM  
 
     ICR1 = 39999;               //defines TOP of the TIM1, causes counter reset to BOTTOM
 	
@@ -84,17 +65,19 @@ int main(void)
 
     for (;;) 
     {
-        OCR1A = 1500 + (horizontal * 3.71);
+        OCR1A = 1500 + (horizontal * 3.71); //
         OCR1B = 1500 + (vertical * 3.71);
 
-        /*OCR1A = 1500;                             
+        //maximum and minimum test rotate   
+        /*OCR1A = 1500;                          
         _delay_ms(1000);
         OCR1A = 3000+300;
         _delay_ms(1000);
         OCR1A = 5300; 
         _delay_ms(1000);*/
 
-        itoa(horizontal, uart_string, 10);
+        //upload to putty view for joystick
+        itoa(horizontal, uart_string, 10);      
         uart_puts(uart_string);
         uart_puts("\r\n");
     }
@@ -105,27 +88,27 @@ int main(void)
 //interrupt triggers ADC conversion
 ISR(TIMER0_OVF_vect)
 {
-   GPIO_write(&ADCSRA,ADSC,1);
+   GPIO_write(&ADCSRA,ADSC,1); 
 }
 
-ISR(TIMER1_OVF_vect)            //overflow interrupt
+ISR(TIMER1_OVF_vect)                          //overflow interrupt
 {
 
 }
 
-ISR(ADC_vect)       //conversion done interrupt
+ISR(ADC_vect)                                //conversion done interrupt
 {
 	// Read 10-bit ACD value
     switch (ADMUX)
     {
-        case 0x40: //0b0100 0000
+        case 0x40:                          //0b0100 0000
             horizontal = ADC;
-            ADMUX =0x41; //0b0100 0001 AC1
+            ADMUX =0x41;                    //0b0100 0001 AC1
             break;
 
         case 0x41:
             vertical = ADC;
-            ADMUX = 0x40; //0b0100 0000 AC0
+            ADMUX = 0x40;                   //0b0100 0000 AC0
             break;
         default:
             //Default code
