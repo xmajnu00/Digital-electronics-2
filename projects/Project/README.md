@@ -31,3 +31,5 @@ Visual studio
 
 1. Microchip, [AVR 8-bit Toolchain for Windows, Linux, Mac OS X](https://www.microchip.com/mplab/avr-support/avr-and-arm-toolchains-c-compilers)
 2. SG90, [schéma SG90](http://www.ee.ic.ac.uk/pcheung/teaching/DE1_EE/stores/sg90_datasheet.pdf)
+3. HW-504, [HW-504 dataheet](http://www.energiazero.org/arduino_sensori/joystick_module.pdf)
+4. [Servomotor](https://www.electronicwings.com/avr-atmega/servo-motor-interfacing-with-atmega16)
