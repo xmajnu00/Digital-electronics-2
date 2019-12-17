@@ -16,7 +16,7 @@
 
 ## Hardware
 
-Arduino UNO ATMega328P
+Arduino UNO ATMega328P <br\>
 SG 90 servomotor
 HW-504 Joystick
 Nepájivé pole
