@@ -1,5 +1,5 @@
 
-# Demo Project
+# Ovládání několika servomotorů SG90 analogovými joystiky HW-504
 
 #### Table of Contents
 
